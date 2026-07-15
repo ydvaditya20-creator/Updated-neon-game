@@ -15,26 +15,28 @@ import { useEffect } from 'react';
 
 function App() {
   useEffect(() => {
-    // Check karein ki kya game YouTube ke environment mein chal raha hai
-    if (window.ytgame) {
-      try {
-        // 1. YouTube ko batayein ki game ka pehla frame ready hai (Loading start)
-        window.ytgame.game.firstFrameReady();
-        console.log("YouTube SDK: First Frame Ready sent");
+    // TypeScript block na kare isliye (window as any) use karein
+    const youtube = (window as any).ytgame;
 
-        // 2. Agar aapka game turant start ho jata hai toh gameReady bhi bhej dein
-        // (Agar loading asset heavy hai, toh use asset load hone ke baad call karein)
-        window.ytgame.game.gameReady();
-        console.log("YouTube SDK: Game Ready sent");
+    if (youtube && youtube.game) {
+      try {
+        // YouTube ko notification bhejein
+        youtube.game.firstFrameReady();
+        console.log("YouTube SDK: First Frame Ready!");
+
+        youtube.game.gameReady();
+        console.log("YouTube SDK: Game Ready!");
       } catch (error) {
-        console.error("YouTube SDK Initialization Error:", error);
+        console.error("SDK Error:", error);
       }
+    } else {
+      console.log("Game is running outside YouTube (Normal Browser)");
     }
   }, []);
 
   return (
-    <div>
-      {/* Aapka Game Canvas ya UI ya Code yahan hoga */}
+    <div style={{ color: 'white', backgroundColor: '#000', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <h1>Game Is Running</h1>
     </div>
   );
 }
