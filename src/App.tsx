@@ -11,6 +11,36 @@ import AchievementsPanel from "./components/AchievementsPanel";
 import Instructions from "./components/Instructions";
 import { TRANSLATIONS, INITIAL_ACHIEVEMENTS, Achievement, ORB_TIERS } from "./types";
 import { gameAudio } from "./utils/audio";
+import { useEffect } from 'react';
+
+function App() {
+  useEffect(() => {
+    // Check karein ki kya game YouTube ke environment mein chal raha hai
+    if (window.ytgame) {
+      try {
+        // 1. YouTube ko batayein ki game ka pehla frame ready hai (Loading start)
+        window.ytgame.game.firstFrameReady();
+        console.log("YouTube SDK: First Frame Ready sent");
+
+        // 2. Agar aapka game turant start ho jata hai toh gameReady bhi bhej dein
+        // (Agar loading asset heavy hai, toh use asset load hone ke baad call karein)
+        window.ytgame.game.gameReady();
+        console.log("YouTube SDK: Game Ready sent");
+      } catch (error) {
+        console.error("YouTube SDK Initialization Error:", error);
+      }
+    }
+  }, []);
+
+  return (
+    <div>
+      {/* Aapka Game Canvas ya UI ya Code yahan hoga */}
+    </div>
+  );
+}
+
+export default App;
+
 
 export default function App() {
   const [language, setLanguage] = useState<"en" | "hi">("en");
