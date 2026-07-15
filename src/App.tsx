@@ -11,37 +11,7 @@ import AchievementsPanel from "./components/AchievementsPanel";
 import Instructions from "./components/Instructions";
 import { TRANSLATIONS, INITIAL_ACHIEVEMENTS, Achievement, ORB_TIERS } from "./types";
 import { gameAudio } from "./utils/audio";
-import { useEffect } from 'react';
 
-function App() {
-  useEffect(() => {
-    // TypeScript block na kare isliye (window as any) use karein
-    const youtube = (window as any).ytgame;
-
-    if (youtube && youtube.game) {
-      try {
-        // YouTube ko notification bhejein
-        youtube.game.firstFrameReady();
-        console.log("YouTube SDK: First Frame Ready!");
-
-        youtube.game.gameReady();
-        console.log("YouTube SDK: Game Ready!");
-      } catch (error) {
-        console.error("SDK Error:", error);
-      }
-    } else {
-      console.log("Game is running outside YouTube (Normal Browser)");
-    }
-  }, []);
-
-  return (
-    <div style={{ color: 'white', backgroundColor: '#000', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <h1>Game Is Running</h1>
-    </div>
-  );
-}
-
-export default App;
 
 
 export default function App() {
