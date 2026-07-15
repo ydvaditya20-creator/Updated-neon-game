@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: ' '/Updated-neon-game/',
+    base: ' './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
