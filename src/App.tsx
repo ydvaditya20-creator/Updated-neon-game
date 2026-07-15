@@ -12,7 +12,14 @@ import Instructions from "./components/Instructions";
 import { TRANSLATIONS, INITIAL_ACHIEVEMENTS, Achievement, ORB_TIERS } from "./types";
 import { gameAudio } from "./utils/audio";
 
-
+function YouTubeLoader() {
+  const youtube = (window as any).ytgame;
+  if (youtube && youtube.game) {
+    youtube.game.firstFrameReady();
+    youtube.game.gameReady();
+  }
+  return null; 
+}
 
 export default function App() {
   const [language, setLanguage] = useState<"en" | "hi">("en");
@@ -240,6 +247,10 @@ export default function App() {
   const currentMaxOrb = ORB_TIERS[Math.min(maxOrbReached, ORB_TIERS.length - 1)];
 
   return (
+        <div>
+      {/* Return ke andar bas is tag ko call karna mat bhoolna */}
+      <YouTubeLoader />
+    
     <div className="min-h-screen bg-[#07080c] text-white flex flex-col justify-between overflow-x-hidden relative">
       {/* Background Ambient Cosmic Blur Shapes */}
       <div className="absolute top-20 left-1/4 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -618,5 +629,6 @@ export default function App() {
         </div>
       )}
     </div>
+ </div> 
   );
 }
