@@ -171,19 +171,51 @@ export default function App() {
 
     // 2. Load Achievements progress
     try {
-      const storedAch = localStorage.getItem("neon_merge_achievements");
-      if (storedAch) {
-        const parsed = JSON.parse(storedAch) as Achievement[];
-        // Align keys with initial configuration in case of scheme changes
-        const merged = INITIAL_ACHIEVEMENTS.map((initial) => {
-          const found = parsed.find((item) => item.id === initial.id);
-          return found ? { ...initial, unlocked: found.unlocked } : initial;
-        });
-        setAchievements(merged);
+  const youtube = (window as any).ytgame;
+
+  if (youtube && youtube.game) {
+    // 1. Agar YouTube Playables par hai, toh unke Cloud Save se data load karein
+    youtube.game.loadData().then((cloudData: string) => {
+      if (cloudData) {
+        try {
+          const parsedData = JSON.parse(cloudData);
+          const storedAch = parsedData.neon_merge_achievements;
+          if (storedAch) {
+            const merged = INITIAL_ACHIEVEMENTS.map((initial) => {
+              const found = storedAch.find((item: any) => item.id === initial.id);
+              return found ? { ...initial, unlocked: found.unlocked } : initial;
+            });
+            setAchievements(merged);
+          }
+        } catch (jsonErr) {
+          console.error("Cloud JSON Parse Error:", jsonErr);
+        }
       }
-    } catch (e) {
-      console.error(e);
+    }).catch((err: any) => {
+      console.error("YouTube Cloud Load Failed:", err);
+      setAchievements(INITIAL_ACHIEVEMENTS); // Fallback to default
+    });
+
+  } else if (typeof localStorage !== 'undefined' && localStorage !== null) {
+    // 2. Agar normal browser mein chal raha hai, toh pehle wala localStorage code chalega
+    const storedAch = localStorage.getItem("neon_merge_achievements");
+    if (storedAch) {
+      const parsed = JSON.parse(storedAch) as Achievement[];
+      const merged = INITIAL_ACHIEVEMENTS.map((initial) => {
+        const found = parsed.find((item) => item.id === initial.id);
+        return found ? { ...initial, unlocked: found.unlocked } : initial;
+      });
+      setAchievements(merged);
     }
+  } else {
+    // Agar dono nahi hain toh default initialization
+    setAchievements(INITIAL_ACHIEVEMENTS);
+  }
+} catch (e) {
+  console.error("Storage Safe Catch:", e);
+  setAchievements(INITIAL_ACHIEVEMENTS);
+}
+
 
     return () => {
       window.removeEventListener("click", unlockAudio);
