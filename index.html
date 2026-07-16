@@ -21,6 +21,25 @@
     errorDiv.innerHTML = '<strong>Game Crashed:</strong> ' + message + '<br>Line: ' + lineno;
     return false;
   };
+      // 2. YouTube Playables Fast Loading Signals Code
+      window.addEventListener('DOMContentLoaded', function() {
+        // First Frame Ready: Jab HTML load ho jaye aur loading screen dikhe
+        if (window.ytgame && window.ytgame.game) {
+          window.ytgame.game.firstFrameReady();
+          console.log("YouTube API: First frame ready sent!");
+        }
+      });
+
+      window.addEventListener('load', function() {
+        // Game Ready: Jab game poori tarah khelne ke liye taiyar ho jaye
+        // React application ko load hone mein thoda time lagta hai isliye ise load event par dala hai
+        setTimeout(function() {
+          if (window.ytgame && window.ytgame.game) {
+            window.ytgame.game.gameReady();
+            console.log("YouTube API: Game ready sent!");
+          }
+        }, 1500); // 1.5 second ka delay taaki React/Vite background mein properly init ho jaye
+      });
 </script>
 
     
