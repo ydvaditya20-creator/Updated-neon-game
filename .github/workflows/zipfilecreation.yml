@@ -1,0 +1,36 @@
+name: Build and Zip Game
+
+on:
+  push:
+    branches: [ "main" ] # Jab aap main branch par push karenge tab chalega
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Project
+      run: npm run build # Isse dist folder banega
+
+    - name: Create Clean ZIP File
+      # Yeh command dist folder ke andar ja kar sahi structure waali zip banayegi
+      run: |
+        cd dist
+        zip -r ../shoot-bubbles-game.zip . *
+
+    - name: Upload ZIP to GitHub Actions
+      uses: actions/upload-artifact@v4
+      with:
+        name: youtube-playable-bundle
+        path: shoot-bubbles-game.zip
