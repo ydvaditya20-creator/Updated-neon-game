@@ -13,13 +13,30 @@ import { TRANSLATIONS, INITIAL_ACHIEVEMENTS, Achievement, ORB_TIERS } from "./ty
 import { gameAudio } from "./utils/audio";
 
 function YouTubeLoader() {
-  const youtube = (window as any).ytgame;
-  if (youtube && youtube.game) {
-    youtube.game.firstFrameReady();
-    youtube.game.gameReady();
-  }
-  return null; 
+  useEffect(() => {
+    const youtube = (window as any).ytgame;
+    
+    if (youtube && youtube.game) {
+      try {
+        // 1. Pehle 'firstFrameReady' bhejenge
+        youtube.game.firstFrameReady();
+        console.log("YouTube SDK: First Frame Ready Sent!");
+
+        // 2. Kuch milliseconds ke gap ke baad 'gameReady' bhejenge
+        setTimeout(() => {
+          youtube.game.gameReady();
+          console.log("YouTube SDK: Game Ready Sent!");
+        }, 100); // 100ms ka delay error ko khatam kar dega
+
+      } catch (error) {
+        console.error("SDK Error:", error);
+      }
+    }
+  }, []);
+
+  return null;
 }
+
 
 export default function App() {
   const [language, setLanguage] = useState<"en" | "hi">("en");
